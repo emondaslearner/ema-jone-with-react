@@ -1,0 +1,27 @@
+.div{
+    padding-right:-20px;
+}
+h2,.itemsCount{
+    text-align:center;
+}
+.totalCount{
+    padding-left:10px;
+    display:block;
+}
+span{
+    display:block;
+    float:right;
+}
+.totalCount{
+    width:200px;
+    line-height:10px;
+}
+.totalCount h4{
+    color:#B12752;
+}
+.totalCount p{
+    font-size:12px;
+}
+.cart{
+    overflow:hidden;
+}
