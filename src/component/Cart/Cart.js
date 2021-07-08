@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Cart.css';
 
 const Cart = (props) => {
-    const price=props.cart.map(alls => alls.price);
+    const price=props.cart.map(alls => alls.price * alls.quantity);
     let sum= 0;
     for(let i = 0;i<price.length;i++){
         sum = sum + price[i];
@@ -33,6 +34,9 @@ const Cart = (props) => {
                 <p>Estimated Tax: <span>${tex}</span></p>
                 <h4>Order Total: <span>${subTotal}</span></h4>
             </div>
+            {
+                props.review ?<Link to="/shipment"><button>proced checkout</button></Link>:<Link to="/review"><button>Review your order</button></Link>
+            }
         </div>
     );
 };

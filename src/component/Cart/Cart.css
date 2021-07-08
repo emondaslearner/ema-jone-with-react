@@ -25,3 +25,11 @@ span{
 .cart{
     overflow:hidden;
 }
+button{
+    background-color:#F0C14B;
+    padding:5px 60px;
+    border:1px solid #A88734;
+    border-radius:2px;
+    margin-bottom:10px;
+    cursor: pointer;
+}

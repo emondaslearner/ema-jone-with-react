@@ -16,7 +16,8 @@
 }
 .productBody{
     overflow: hidden;
-    width:75%;
+    width:73%;  
+    padding-right:10px;
 }
 .productBody .product-des .left{
     float:left;
@@ -36,6 +37,7 @@
     border:1px solid #A88734;
     border-radius:2px;
     margin-bottom:10px;
+    cursor: pointer;
 }
 .productName{
     color:blue;

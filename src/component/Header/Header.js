@@ -1,5 +1,12 @@
 import React from 'react';
 import emaLogo from '../../images/logo.png';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
 import './Header.css';
 
 const Header = () => {
@@ -11,8 +18,8 @@ const Header = () => {
             </div>
             <nav>
                 <a href="/shop">Shop</a>
-                <a href="/order Review">Order Review</a>
-                <a href="/manage inventory here">Manage Inventory here</a>
+                <a href="/review">Order Review</a>
+                <a href="/manage">Manage Inventory here</a>
             </nav>
         </div>
     );
