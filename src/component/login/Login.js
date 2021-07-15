@@ -1,44 +1,74 @@
 import React, { useContext, useState } from 'react';
-import firebase from "firebase/app";
-import "firebase/auth";
-import './Login.css'
-import firebaseConfig from '../firebaseConfig/firebase.config';
+import './Login.css';
 import { theme } from '../../App';
 import { useHistory, useLocation } from 'react-router';
+import { signInGoogle,initialize,signInFacebook,signUp,signIn } from './LoginFirebase';
 
-firebase.initializeApp(firebaseConfig);
 const Login = () => {
+    //set user
     const [loginUser,setLoginUser] = useContext(theme);
+    const [user,setUser] = useState({
+        name:'',
+        password:'',
+        email:''
+    })
 
+
+    // redirect when login success
     let history = useHistory();
     let location = useLocation();
-
     let { from } = location.state || { from: { pathname: "/" } };
 
-    
+
+    //initialize the app
+    initialize();
+
+    //when request will not success
+    const [isValid,setIsValid] = useState('');
+
+    //when success
+    const [success,setSuccess] = useState('');
+
+    //if any input empty then state will set
+    const [email,setEmail] = useState([]);
+    const [password,setPassword] = useState([]);
+
+    //sign in with google
+    const signInWithGoogle = () =>{
+        signInGoogle()
+        .then(res => {
+            setLoginUser(res.user);
+            setSuccess('You have been resister successfully');
+            history.replace(from);
+        })
+        .catch(error => {
+            const errorMessage = error.message;
+            setSuccess('You have been resister successfully');
+            setIsValid(errorMessage);
+        })
+    }
+
+
+    //sign in with facebook
+    const signInWithFacebook = () => {
+        signInFacebook()
+        .then(res => {
+            setLoginUser(res.user);
+            history.replace(from);
+        })
+        .catch(error => {
+            const errorMessage = error.message;
+            setIsValid('facebook email already exist');
+        })
+    }
+
     //get the input by function
     const getElement = names => {
         const elements = document.querySelector('.'+names);
         return elements;
     }
 
-    //if any input empty then state will set
-    const [email,setEmail] = useState([]);
-    const [password,setPassword] = useState([]);
-    
-    //if the information is valid
-    const [isValid,setIsValid] = useState('');
-
-    //success
-    const [success,setSuccess] = useState('');
-
-    //user in formation
-    const [user,setUser] = useState({
-        name:'',
-        password:'',
-        email:''
-    })
-    //change user status
+    //check sign in or sign up
     const [isSignIn,setIsSignIn] = useState(false);
     const changeStatus = () => {
         if(isSignIn){
@@ -49,7 +79,7 @@ const Login = () => {
     }
 
     //submit the form
-    const signUp = (e) => {
+    const signUpTo = (e) => {
         e.preventDefault();
 
 
@@ -65,50 +95,35 @@ const Login = () => {
             setPassword(' ');
         }     
         
+        //sign up the user
         if(isSignIn){
-            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-            .then((userCredential) => {
-                var users = userCredential.user;
-                updateName(user.name)
+            signUp(user.name,user.email,user.password)
+            .then(res => {
+                setLoginUser(res.user);
                 setSuccess('You have been resister successfully');
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                if(errorMessage != ''){
-                    setIsValid(errorMessage);
-                }
-            });
-        }else{
-            firebase.auth().signInWithEmailAndPassword(user.email, user.password)
-            .then((userCredential) => {
-                var users = userCredential.user;
-                setSuccess('You have been sign in successfully');
-                setLoginUser(users.email);
                 history.replace(from);
             })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-             });
+            .catch(error => {
+                const errorMessage = error.message;
+                setIsValid(errorMessage);
+            })
+        }
+        //sign in the user
+        else{
+            signIn(user.email,user.password)
+            .then(res => {
+                setLoginUser(res.user);
+                setSuccess('You have been resister successfully');
+                history.replace(from);
+            })
+            .catch(error => {
+                const errorMessage = error.message;
+                setIsValid(errorMessage);
+            })
         }
         
     } 
-    //updateUser
-    const updateName = (name) => {
-        const userName = firebase.auth().currentUser;
-        userName.updateProfile({
-          displayName: name,
-        })
-        .then(() => {
-          // Update successful
-          // ...
-        })
-        .catch((error) => {
-          // An error occurred
-          // ...
-        }); 
-      }
+    
 
     //check information is valid 
     const handleBlur = (e) => {
@@ -132,26 +147,7 @@ const Login = () => {
         
     }
 
-    //sign in with google
-    const providerGoogle = new firebase.auth.GoogleAuthProvider();
-    const signInWithGoogle = () => {
-        firebase.auth().signInWithPopup(providerGoogle)
-        .then(function(result) {
-          }).catch(function(error) {
-          })
-    }
-
-    //sing in with facebook
-    const providerFacebook = new firebase.auth.FacebookAuthProvider();
-    const signInWithFacebook = () => {
-        firebase
-        .auth()
-        .signInWithPopup(providerFacebook)
-        .then((result) => {
-        })
-        .catch((error) => {
-        });
-    }
+    
 
    
 
@@ -176,7 +172,7 @@ const Login = () => {
                 {
                     password && <p className="p">{password}</p>
                 }
-                <input className="button" onClick={signUp} type="submit" value={isSignIn ? 'Sign up':'Sign in'} />
+                <input className="button" onClick={signUpTo} type="submit" value={isSignIn ? 'Sign up':'Sign in'} />
                 <input onClick={signInWithGoogle} value="Sign up with google" className="button"/>
                 <input onClick={signInWithFacebook} className="button" value="Sign up with facebook"/>
                 {

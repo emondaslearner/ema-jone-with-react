@@ -1,0 +1,18 @@
+.hook-form{
+    margin-top:100px;
+}
+.hook-input{
+    margin:10px auto;
+    border-radius:5px;
+}
+.hook-input:last-child{
+    background-color:#EC5990;
+    color:white;
+    font-family:tahoma;
+    cursor: pointer;
+    transition:.5s background;
+    border:2px solid #EC5990;
+}
+.hook-input:last-child:hover{
+    background:#BF1650;
+}
